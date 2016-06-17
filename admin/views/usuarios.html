@@ -1,0 +1,58 @@
+<div class="container-fluid" id="alerta">
+
+ <!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Gestion de Usuarios:
+            </h1>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <i class="fa fa-users"></i> Usuarios
+                </li>
+            </ol>
+        </div>
+    </div>
+     <!-- /.Page Heading -->
+
+    <div class="form-group">
+        <div class="col-lg-10 col-lg-offset-1">       
+            <div class="table-responsive">
+                <div class="dataTable_wrapper">
+                    <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs"  class="row-border hover">
+                        <thead>
+                            <tr>
+                                <th>Login</th>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                                <th>Perfil</th>
+                                <th>Ultimo Ingreso</th>
+                                <th>Acciones</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="us in Usuarios" >
+                                <td><a ng-show="Perfil.perfil==1" href="#/editar_usuario/{{us.id_usuario}}"> {{us.login }}</a>
+                                <a ng-show="Perfil.perfil==2" href=""> {{us.login }}</a></td>
+                                <td> {{us.nombres}} {{us.apellidos}}</td>
+                                <td> {{us.estado  | filterActivo}}</td>
+                                <td> {{us.nombre_perfil}}</td>
+                                <td> {{us.last_login }}</td>
+                                <td><a href="" ng-show="us.estado==1 && Perfil.perfil==1" title="Desactivar" ng-click="cambiarEstadoUsuario($index, us.id_usuario, us.estado)"><span class="glyphicon glyphicon-off" style="font-size: 20px"></a>
+                                  <a href="" ng-show="us.estado==0 && Perfil.perfil==1" title="Activar" ng-click="cambiarEstadoUsuario($index, us.id_usuario, us.estado)"><span class="glyphicon glyphicon-off" style="font-size: 20px; color:red"></a>
+                                  <a href="" ng-show="us.estado==1 && Perfil.perfil==2" title="Desactivar"><span class="glyphicon glyphicon-off" style="font-size: 20px"></a>
+                                  <a href="" ng-show="us.estado==0 && Perfil.perfil==2" title="Activar"><span class="glyphicon glyphicon-off" style="font-size: 20px; color:red"></a>
+                                </td>
+                                 
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!-- /.datatable wrapper -->
+                
+            </div> <!-- /.table-responsive -->
+        </div>
+    </div><!-- /.Nuevo-fluid -->
+</div><!-- /.row -->

@@ -1,0 +1,52 @@
+<div class="container-fluid" id="alerta">
+
+ <!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Gestion de Parámetros:
+            </h1>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <i class="fa fa-cubes"></i> Parámetros
+                </li>
+            </ol>
+        </div>
+    </div>
+     <!-- /.Page Heading -->
+
+    <div class="form-group">
+        <div class="col-lg-10 col-lg-offset-1">       
+            <div class="table-responsive">
+                <div class="dataTable_wrapper">
+                    <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs"  class="row-border hover">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo de Dato</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="pa in Parametros" >
+                                <td><a ng-show="Perfil.perfil==1" href="#/editar_parametro/{{pa.id_parametro}}"> {{pa.nombre_parametro }}</a>
+                                <a ng-show="Perfil.perfil==2" href=""> {{pa.nombre_parametro }}</a></td>
+                                <td> {{pa.nombre_tipo }}</td>
+                                <td> {{pa.estado | filterActivo}}</td>
+                                <td><a href="" ng-show="pa.estado==1 && Perfil.perfil==1" title="Desactivar" ng-click="cambiarEstadoParametro($index, pa.id_parametro, pa.estado)"><span class="glyphicon glyphicon-off" style="font-size: 20px"></a>
+                                  <a href="" ng-show="pa.estado==0 && Perfil.perfil==1" title="Activar" ng-click="cambiarEstadoParametro($index, pa.id_parametro, pa.estado)"><span class="glyphicon glyphicon-off" style="font-size: 20px; color:red"></a>
+                                  <a href="" ng-show="pa.estado==1 && Perfil.perfil==2" title="Desactivar"><span class="glyphicon glyphicon-off" style="font-size: 20px"></a>
+                                  <a href="" ng-show="pa.estado==0 && Perfil.perfil==2" title="Activar"><span class="glyphicon glyphicon-off" style="font-size: 20px; color:red"></a>
+                                </td>
+                                 
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!-- /.datatable wrapper -->
+                
+            </div> <!-- /.table-responsive -->
+        </div>
+    </div><!-- /.Nuevo-fluid -->
+</div><!-- /.row -->

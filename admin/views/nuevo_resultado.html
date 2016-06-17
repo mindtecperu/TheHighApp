@@ -1,0 +1,80 @@
+<div class="container-fluid" id="alerta">
+
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Nuevo Parámetro: 
+            </h1>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-calculator"></i><a href="#/resultado"> Resultados</a>
+                </li>
+                <li class="active">
+                    <i class="fa fa-fw fa-plus"></i> Nuevo Resultado
+                </li>
+            </ol>
+        </div>
+    </div>
+     <!-- /.Page Heading -->
+
+    <div class="form-group">
+        <form ng-submit="guardarResultado(re)">
+                <div class="col-lg-10 col-md-offset-1">
+                    <div class="col-lg-2">
+                         <label class="control-label">Nombre:</label>
+                    </div>
+                    <div class="col-lg-6">
+                        <input class="form-control" ng-model='re.nombre_resultado' type="text" placeholder="Nombre(*) " required/>
+                    </div>
+                    <br/><br/>
+                </div>
+
+                <div class="col-lg-10 col-md-offset-1">
+                    <div class="col-lg-2">
+                         <label class="control-label">Observación:</label>
+                    </div>
+                    <div class="col-lg-6">
+                        <input class="form-control" ng-model='re.observacion' type="text" placeholder="Observación(*) " required/>
+                    </div>
+                    <br/><br/>
+                </div>
+
+                <div class="col-lg-10 col-md-offset-1">
+                    <div class="col-lg-2">
+                         <label class="control-label">Recomendación:</label>
+                    </div>
+                    <div class="col-lg-6">
+                        <input class="form-control" ng-model='re.recomendacion' type="text" placeholder="Recomendación(*) " required/>
+                    </div>
+                    <br/><br/>
+                </div>
+
+                <div class="col-lg-10 col-md-offset-1">
+                    <div class="col-lg-2">
+                         <label class="control-label">Color:</label>
+                    </div>
+                    <div class="col-lg-4">
+                        <select class="form-control" ng-model='re.id_color' required>
+                        <option  value="">- SeleccionarColor </option>
+                        <option ng-repeat="co in colores" value="{{co.id_color}}">{{co.nombre_color | filterColor}}</option>
+                        </select>
+                    </div>
+                    <br/><br/>
+                </div>
+
+                <div class="col-lg-10 col-md-offset-1">
+                    <br/>
+                </div>
+
+                <div class="col-lg-10 col-lg-offset-3">
+                    <div class="col-lg-2">
+                       <button type="submit" class="col-lg-12 col-xs-12 btn btn-primary">Crear</button>
+                    </div>
+                    <div class="col-lg-2">
+                       <a href="#/resultado"><button class="col-lg-12 col-xs-12 btn btn-primary">Cancelar</button></a>
+                    </div>
+                </div>
+        </form>
+    </div>
+</div>
