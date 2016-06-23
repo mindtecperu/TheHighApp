@@ -61,7 +61,13 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
         .withButtons([
             'colvis',
             'copy',
-            'excel'
+            {
+                extend: "excel",
+                filename:  "Listado_usuarios",
+                title:"Listado usuarios High APP",
+                CharSet: "utf8",
+                exportData: { decodeEntities: true }
+            },
         ]);
 
     $scope.dtColumnDefs = [
@@ -254,7 +260,13 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
         .withButtons([
             'colvis',
             'copy',
-            'excel'
+            {
+                extend: "excel",
+                filename:  "Lista_parametros",
+                title:"Listado parámetros High APP",
+                CharSet: "utf8",
+                exportData: { decodeEntities: true }
+            },
         ]);
 
     $scope.dtColumnDefs = [
@@ -383,7 +395,13 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
         .withButtons([
             'colvis',
             'copy',
-            'excel'
+            {
+                extend: "excel",
+                filename:  "Listado_resultados",
+                title:"Listado resultados High APP",
+                CharSet: "utf8",
+                exportData: { decodeEntities: true }
+            },
         ]);
 
     $scope.dtColumnDefs = [

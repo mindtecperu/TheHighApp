@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header">
-                Gestion de Usuarios:
+                Gestión de Usuarios:
             </h1>
             <ol class="breadcrumb">
                 <li class="active">
@@ -34,8 +34,8 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="us in Usuarios" >
-                                <td><a ng-show="Perfil.perfil==1" href="#/editar_usuario/{{us.id_usuario}}"> {{us.login }}</a>
-                                <a ng-show="Perfil.perfil==2" href=""> {{us.login }}</a></td>
+                                <td><a ng-if="Perfil.perfil==1" href="#/editar_usuario/{{us.id_usuario}}"> {{us.login }}</a>
+                                <a ng-if="Perfil.perfil==2" href=""> {{us.login}}</a></td>
                                 <td> {{us.nombres}} {{us.apellidos}}</td>
                                 <td> {{us.estado  | filterActivo}}</td>
                                 <td> {{us.nombre_perfil}}</td>

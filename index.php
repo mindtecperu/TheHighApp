@@ -23,7 +23,7 @@
                 border-bottom-left-radius: 0;
             }
             #contenedor{
-                background: #005F9F;
+                background: #25CCB0;
                 height: 350px
             }
             #logo{
@@ -36,10 +36,26 @@
             #form{
                 margin-top: 40px;
             }
-            #sistema{
-                color:white;
-                margin-top: 120px;
+            
+            @media (min-width:768px){
+                #sistema{
+                    color: white;
+                    margin-top: 120px;
+                }
             }
+
+            @media (min-width:1200px){
+                #sistema{
+                    color: white;
+                    margin-top: 120px;
+                }
+            }
+            @media (max-width:768px){
+                #sistema{
+                    color: white;
+                }
+            }
+            
             #footer{
                 background: #DDD;
                 color: black;
@@ -48,10 +64,10 @@
     </head>
     <body ng-app="main" ng-controller="ControllerLogin as ctrlLogin">
     </br>
-        <div class="col-lg-12 col-lg-offset-1" id="logo"><img class="img-responsive" src="img/ins.png"></div>
-        <div class="col-lg-12" id="contenedor">
-        <div class="col-lg-offset-2 col-lg-4" id="sistema" ><h3>Centro de Soporte</h3></div>
-        <div id="form" class="col-lg-offset-2 col-lg-4">
+        <div class="col-lg-6 col-lg-offset-1 col-md-offset-1 col-sm-12 col-sm-offset-1 col-md-12 col-xs-offset-1" id="logo"><img class="img-responsive" src="img/logo-02.png"></div>
+        <div class="col-lg-12 col-md-12 col-sm-12" id="contenedor">
+        <div class="col-lg-offset-2 col-lg-4 col-md-offset-1 col-md-4 col-sm-4" id="sistema" ><h3>The High App</h3></div>
+        <div id="form" class="col-lg-offset-2 col-lg-4 col-md-offset-1 col-md-6 col-sm-offset-1 col-sm-7">
             <form class="login-form" ng-submit="ctrlLogin.postForm()">
                 <h2 id="acceso">Acceso</h2>
                 <label for="inputUsuario" class="sr-only">Login:</label>
@@ -64,6 +80,7 @@
             </form>
         </div>
         </div>
-        <div class="col-lg-12" id="footer">The High APP</div>
+        <div class="col-lg-12 col-sm-12 col-md-12" id="footer">The High APP</div>
+        <div class="col-lg-12 col-sm-12 col-md-12" id="logo"><img class="img-responsive" src="img/ins.png"></div>
     </body>
 </html>

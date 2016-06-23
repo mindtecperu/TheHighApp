@@ -15,7 +15,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Gestión de Tickets INTELECTA</title>
+    <title>The High APP</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
@@ -42,9 +42,9 @@
     <!-- wrapper -->
      <div id="wrapper">
 
-        <!-- Navigation -->  
+        <!-- Navigation style="background: #226695;" -->  
         <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
-            <div class="container topnav" style="background: #226695;" ng-controller="navbarcontroller">
+            <div class="container topnav"  ng-controller="navbarcontroller">
                 <!-- Brand and toggle get grouped for better mobile display -->
 
                 <div class="navbar-header">
@@ -54,9 +54,12 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
+                    <!--a class="navbar-brand" href="#/">
+                    <img alt="Brand"  height="100%" src="../img/logo-06.png">
+                    </a-->
                     <a class="navbar-brand" href="#/">
-                        <span style="color:white; font-size: 35px">INS</span>
-                        <span style="color:white; font-size: 15px"> The High APP</span>
+                        <span style="color:#565656; font-size: 35px">INS</span>
+                        <span style="color:#565656; font-size: 15px"> The High APP</span>
                     </a>
                 </div>
             
