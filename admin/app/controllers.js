@@ -525,6 +525,170 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
   }])
   // /#Controlador Editar Resultado
 
+
+   // Lista de Diagnosticos
+.controller('diagnosticosController',['$scope', '$location', 'DTOptionsBuilder', 'DTColumnDefBuilder', '$http', 'Alertify', function ($scope, $location, DTOptionsBuilder, DTColumnDefBuilder, $http, Alertify) {
+
+    $scope.dtOptions = DTOptionsBuilder.newOptions()
+        .withPaginationType('full_numbers')
+        .withDisplayLength(10)
+        .withBootstrap()
+        .withButtons([
+            'colvis',
+            'copy',
+            {
+                extend: "excel",
+                filename:  "Listado_diagnosticos",
+                title:"Listado diagnosticos High APP",
+                CharSet: "utf8",
+                exportData: { decodeEntities: true }
+            },
+        ]);
+
+    $scope.dtColumnDefs = [
+        DTColumnDefBuilder.newColumnDef(0),
+        DTColumnDefBuilder.newColumnDef(1),
+        DTColumnDefBuilder.newColumnDef(2)
+    ];
+
+    $scope.getDiagnostico= function(){
+       $http.post('api/getDiagnostico.php' )
+        .success(function(data) {
+          console.log(data);
+          $scope.Diagnosticos=data[0];
+          $scope.ParametrosDiagnostico=data[1];
+        })
+        .error(function(data) {
+          console.log('Error: ' + data);
+        });
+    };
+
+    $scope.getDiagnostico();
+     
+    $scope.cambiarEstadoDiagnostico=function(index, codigo, estado){
+      $http.post('api/actualizarestadoresultado.php',{id:codigo, estado:estado})
+      .success(function(data) {
+        $scope.Resultados[index].estado=!estado;
+         Alertify.success('Estado modificado exitosamente.');
+        //$scope.Usuarios=data;
+      })
+      .error(function(data) {
+        console.log('Error: ' + data);
+        Alertify.error('Error al tratar de cambiar el estado.');
+      });
+    }
+}]) // /#Lista de Resultados
+
+// Controlador Nuevo Diagnostico
+.controller('nuevoDiagnosticoController',['$scope', '$http', '$location', '$filter', 'Alertify', function ($scope, $http, $location, $filter, Alertify) {
+    
+    $scope.paramDiag=[];
+
+      var getParametro= function(){
+        $http.post('api/getParametro.php' )
+          .success(function(data) {
+            console.log(data);
+            $scope.parametros=data;
+            
+          })
+          .error(function(data) {
+            console.log('Error: ' + data);
+          });
+      };
+
+      var getOperaciones= function(){
+        $http.post('api/getOperaciones.php' )
+          .success(function(data) {
+            console.log(data);
+            $scope.operaciones=data;
+          })
+          .error(function(data) {
+            console.log('Error: ' + data);
+          });
+      };
+      
+      $scope.agregar_parametro=function(param, valid){
+        if(valid){
+          if(param){
+            var elemento = {"id_parametro":param.id_parametro,"id_operacion":param.id_operacion,"valor":param.valor, "nombre_parametro":$filter('filter')($scope.parametros, {id_parametro: parseInt(param.id_parametro)}, true)[0]['nombre_parametro'], "operacion":$filter('filter')($scope.operaciones, {id_operacion:parseInt(param.id_operacion)}, true)[0]['signo']};
+            $scope.paramDiag.push(elemento);
+            console.log($scope.paramDiag);
+            $scope.npar.id_parametro="";
+            $scope.npar.id_operacion="";
+            $scope.npar.valor="";
+            Alertify.success("Parámetro agregado");
+          }
+        }
+        else{
+          Alertify.error('Debe completar todos los campos.');
+        }
+      };
+
+      $scope.eliminarParametro=function(index){
+        $scope.paramDiag.splice(index,1);
+        Alertify.success('Parámetro eliminado.');
+      };
+
+      $scope.crearDiagnostico=function(re){
+        console.log(re);
+        console.log($scope.paramDiag);
+        if(re != undefined){
+          $http.post('api/crearDiagnostico.php',{diagnostico:re, parametros:$scope.paramDiag})
+            .success(function(data) {
+              if(data.Success){
+                  console.log(data);
+                  Alertify.success("Resultado creado exitosamente.");
+              }else if(data.Error){
+                  console.log(data);
+                  Alertify.error(data.Error);
+              }
+            })
+            .error(function(data) {
+              console.log('Error: ' + data);
+            });
+        }
+        else{
+          Alertify.error("Debe completar la descripción del diagnóstico.");
+        }
+      };
+
+      getParametro();
+      getOperaciones();
+  }])
+  // #Controlador Nuevo Resultado
+
+
+// Controlador Calcular
+.controller('calcularController',['$scope', 'DTOptionsBuilder', 'DTColumnDefBuilder', '$http', 'Alertify', function ($scope, DTOptionsBuilder, DTColumnDefBuilder, $http, Alertify) {
+    $scope.calcu=[];
+    var getParametro= function(){
+        $http.post('api/getParametrosActivos.php' )
+          .success(function(data) {
+            console.log(data);
+            $scope.Parametros=data;
+            
+          })
+          .error(function(data) {
+            console.log('Error: ' + data);
+          });
+      };
+
+     $scope.calcular= function(){
+      console.log($scope.calcu);
+        $http.post('api/calcular.php', {params: $scope.calcu} )
+          .success(function(data) {
+            console.log(data);
+            
+          })
+          .error(function(data) {
+            console.log('Error: ' + data);
+          });
+      };
+
+      getParametro();
+
+}]) // /#Controlador Calcular
+
   // Logout
   .controller('navbarcontroller',['$scope', '$location', '$http', function ($scope, $location, $http) {
         $scope.logout=function(){

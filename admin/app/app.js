@@ -69,6 +69,21 @@ var app = angular.module('intelectaApp', [
           caseInsensitiveMatch: true,
           controller: 'editarResultadoController'
         })
+          .when('/diagnosticos', {
+          templateUrl: 'views/diagnosticos.html',
+          caseInsensitiveMatch: true,
+          controller: 'diagnosticosController'
+        })
+          .when('/nuevo_diagnostico', {
+          templateUrl: 'views/nuevo_diagnostico.html',
+          caseInsensitiveMatch: true,
+          controller: 'nuevoDiagnosticoController'
+        })
+          .when('/calcular', {
+          templateUrl: 'views/calcular.html',
+          caseInsensitiveMatch: true,
+          controller: 'calcularController'
+        })
         .otherwise({
           redirectTo: '/'
         });

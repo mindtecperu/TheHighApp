@@ -1,4 +1,4 @@
-<div class="container-fluid" id="alerta">
+<div class="container-fluid">
 
     <!-- Page Heading -->
     <div class="row">
@@ -32,6 +32,16 @@
 
                 <div class="col-lg-10 col-md-offset-1">
                     <div class="col-lg-2">
+                         <label class="control-label">Abreviatura :</label>
+                    </div>
+                    <div class="col-lg-6">
+                        <input class="form-control" ng-model='pa.abreviatura' type="text" placeholder="Abreviatura"/>
+                    </div>
+                    <br/><br/>
+                </div>
+
+                <div class="col-lg-10 col-md-offset-1">
+                    <div class="col-lg-2">
                          <label class="control-label">Tipo de Dato:</label>
                     </div>
                     <div class="col-lg-4">
@@ -39,6 +49,16 @@
                         <option  value="">- SeleccionarTipoDato </option>
                         <option ng-repeat="td in tipoDatos" value="{{td.id_tipo_dato}}">{{td.nombre_tipo}}</option>
                         </select>
+                    </div>
+                    <br/><br/>
+                </div>
+
+                <div class="col-lg-10 col-md-offset-1">
+                    <div class="col-lg-2">
+                         <label class="control-label">Unidad :</label>
+                    </div>
+                    <div class="col-lg-6">
+                        <input class="form-control" ng-model='pa.unidad' type="text" placeholder="Unidad"/>
                     </div>
                     <br/><br/>
                 </div>

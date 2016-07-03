@@ -83,10 +83,19 @@
                     </li>
 
                     <li class="dropdown">
-                        <a href="/#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-calculator"></i> Resultados<b class="caret"></b></a>
+                        <a href="/#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-hospital-o"></i> Resultados<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#/resultado"><i class="fa fa-fw fa fa-calculator"></i> Resultado de diagnóstico</a></li>
+                                <li><a href="#/resultado"><i class="fa fa-fw fa fa-hospital-o"></i> Resultado de diagnóstico</a></li>
                                 <li ng-show="Perfil.perfil==1"><a href="#/nuevo_resultado" ><i class="fa fa-fw fa-plus"></i> Nuevo resultado de diagnóstico</a></li>
+                            </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="/#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-calculator"></i> Diagnósticos<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#/diagnosticos"><i class="fa fa-fw fa fa-list"></i> Listado de diagnóstico</a></li>
+                                <li><a href="#/nuevo_diagnostico" ><i class="fa fa-fw fa-plus"></i> Nuevo diagnóstico</a></li>
+                                <li><a href="#/calcular" ><i class="fa fa-fw fa-calculator"></i> Calcular diagnóstico</a></li>
                             </ul>
                     </li>
                     

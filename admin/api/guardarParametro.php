@@ -23,12 +23,14 @@ require_once('../../api/config/mysql.php');
 		$mensaje =array('Error' => 'Error: El nombre del parámetro ingresado ya existe.');
 	}
 	else{
-		$q = "INSERT INTO parametro (nombre_parametro, id_tipo_dato, estado, created_at)
-     	values (:nombre_parametro, :id_tipo_dato, :estado, CURRENT_TIMESTAMP)";
+		$q = "INSERT INTO parametro (nombre_parametro, id_tipo_dato, abreviatura, unidad, estado, created_at)
+     	values (:nombre_parametro, :id_tipo_dato, :abreviatura, :unidad, :estado, CURRENT_TIMESTAMP)";
 	
 		$stmt = $dbh->prepare($q);
 		$stmt->bindParam(':nombre_parametro', $pa->nombre_parametro, PDO::PARAM_STR);
 		$stmt->bindParam(':id_tipo_dato', $pa->id_tipo_dato, PDO::PARAM_STR);
+		$stmt->bindParam(':abreviatura', $pa->abreviatura, PDO::PARAM_STR);
+		$stmt->bindParam(':unidad', $pa->unidad, PDO::PARAM_STR);
 		$stmt->bindParam(':estado', $estado, PDO::PARAM_STR);
 		
 		$r = $stmt->execute();
