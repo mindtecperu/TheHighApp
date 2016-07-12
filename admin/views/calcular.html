@@ -25,8 +25,14 @@
                     <div class="col-lg-6">
                          <label class="control-label"> {{params.nombre_parametro}} </label>
                     </div>
-                    <div class="col-lg-6">
-                        <input class="form-control" ng-model='calcu[params.id_parametro]' type="number" placeholder="{{params.unidad}}"/>
+                    <div ng-if="params.id_tipo_dato!=3" class="col-lg-6">
+                        <input class="form-control" ng-model="Parametros[$index].valor" type="number" placeholder="{{params.unidad}}"/>
+                    </div>
+                    <div ng-if="params.id_tipo_dato == 3" class="col-lg-6">
+                        <select class="form-control" ng-model="Parametros[$index].valor">
+                            <option value="">- Seleccionar -</option>
+                            <option ng-repeat="op in Opciones | filter:{id_parametro:params.id_parametro}:true" value="{{op.id_maestro}}">{{op.etiqueta}}</option>
+                        </select>
                     </div>
                     <br/><br/>
                 </div>
@@ -42,4 +48,56 @@
                 </div>
         </form>
     </div>
+
+
+    <!-- Resultado  -->
+    <div class="row" ng-if="calculado==true">
+        <div class="col-lg-12">
+            <h3 class="col-lg-12 page-header">
+                Parámetros ingresados: 
+            </h3>
+
+            <div ng-repeat="par in Parametros">
+                <div class="col-lg-5 col-lg-offset-1" ng-if="!!par.valor">
+                    <div class="col-lg-12 input-group" >
+                        <button type="button" class="btn btn-lg btn-primary" disabled="disabled">{{par.nombre_parametro}} :</button>
+                        <button type="button" ng-if="par.id_tipo_dato != 3" class="btn btn-default btn-lg" disabled="disabled">{{par.valor}}</button>
+                        <button type="button" ng-repeat="opt in Opciones | filter:{id_maestro:par.valor}:true" ng-if="par.id_tipo_dato == 3" class="btn btn-default btn-lg" disabled="disabled">{{opt.etiqueta}} </button>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="col-lg-12 page-header">
+                Resultado:
+            </h3>
+
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-1">       
+                    <div class="table-responsive">
+                        <div class="dataTable_wrapper">
+                            <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs"  class="row-border hover">
+                                <thead>
+                                    <tr>
+                                        <th>Diagnóstico</th>
+                                        <th>Resultado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr ng-repeat="diag in Resultado ">
+                                            <td> <span ng-repeat="paxdi in ParametrosDiagnostico | filter : {id_diagnostico:diag.id}:true"> {{paxdi.nombre_parametro}} {{paxdi.signo}} <span ng-if="paxdi.id_tipo_dato!=3">{{paxdi.valor}}</span><span ng-if="paxdi.id_tipo_dato==3">{{paxdi.etiqueta}}</span> </span> </td>
+                                            <td><strong> POSITIVO </strong> </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                        </div><!-- /.datatable wrapper -->
+                        
+                    </div> <!-- /.table-responsive -->
+                </div>
+            </div><!-- /.Nuevo-fluid -->
+
+        </div>
+    </div>
+     <!-- /.Resultado -->
+
+
 </div>

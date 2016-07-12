@@ -24,6 +24,13 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
     };
   })
 
+  .filter('filterNulo', function(){
+    return function(id){
+      console.log(id[0]);
+      return id[0];
+    };
+  })
+
   .filter('filterColor', function(){
     return function(id){
       if(id=='green'){
@@ -291,8 +298,13 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
     $scope.cambiarEstadoParametro=function(index, codigo, estado){
       $http.post('api/actualizarestadoparametro.php',{id:codigo, estado:estado})
       .success(function(data) {
-        $scope.Parametros[index].estado=!estado;
-         Alertify.success('Estado modificado exitosamente.');
+        if(data.success){
+          $scope.Parametros[index].estado=!estado;
+          Alertify.success(data.success);
+        }
+        else if(data.Error){
+          Alertify.error(data.Error);
+        }
       })
       .error(function(data) {
         Alertify.error('Error al tratar de cambiar el estado.');
@@ -300,9 +312,90 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
     }
 }]) // /#Lista de Parametros  
 
+
+// Controlador opciones seleccionables
+.controller('opcionesController', ['$scope', '$http', '$location', 'DTOptionsBuilder', 'DTColumnDefBuilder', '$filter', 'Alertify', '$routeParams', function ($scope, $http, $location, DTOptionsBuilder, DTColumnDefBuilder, $filter, Alertify, $routeParams) {
+    
+    $scope.dtOptions = DTOptionsBuilder.newOptions()
+        .withPaginationType('full_numbers')
+        .withDisplayLength(10)
+        .withBootstrap()
+
+
+    var getParametro= function(){
+      $http.post('api/getparametrobyId.php',{id:$routeParams.id} )
+        .success(function(data) {
+          console.log(data);
+          $scope.Parametro=data[0];
+        })
+        .error(function(data) {
+          console.log('Error: ' + data);
+        });
+    };
+
+    var getEtiquetas= function(){
+      $http.post('api/getEtiquetasById.php', {id:$routeParams.id} )
+        .success(function(data) {
+          console.log(data);
+          $scope.Etiquetas=data;
+        })
+        .error(function(data) {
+          console.log('Error: ' + data);
+        });
+    };
+
+    $scope.nuevaEtiqueta= function(nueva){
+      $http.post('api/nuevaEtiqueta.php', {etiqueta:nueva, id:$routeParams.id} )
+        .success(function(data) {
+          if(data.Success){
+            console.log(data);
+            $scope.Etiquetas.push({'id_maestro':data.id, 'etiqueta':nueva.etiqueta, 'id_parametro':$routeParams.id});
+            console.log($scope.Etiquetas);
+            Alertify.success(data.Success);
+          }
+          else if(data.Error){
+            Alertify.error(data.Error);
+          }
+        })
+        .error(function(data) {
+          console.log('Error: ' + data);
+        });
+    };
+
+    $scope.eliminarOpcion= function(index, maestro){
+
+      Alertify.confirm("¿Está Seguro que desea eliminar la opción seleccionada?")
+      .then(function () {
+          $http.post('api/eliminarEtiqueta.php', {id_parametro:$routeParams.id, id_maestro:maestro})
+          .success(function(data) {
+            if(data.Success){
+              console.log(data);
+              $scope.Etiquetas.splice(index,1);
+
+              console.log($scope.Etiquetas);
+              Alertify.success(data.Success);
+            }
+            else if(data.Error){
+              Alertify.error(data.Error);
+            }
+          })
+          .error(function(data) {
+            console.log('Error: ' + data);
+          });
+        
+      }, function () {
+        Alertify.log('Acción cancelada');
+      });
+    };
+
+    getParametro();
+    getEtiquetas();
+
+  }])
+// #/ Controlador opciones seleccionables
+
 // Controlador Nuevo Parametro
 .controller('nuevoParametroController',['$scope', '$http', '$location', '$filter', 'Alertify', function ($scope, $http, $location, $filter, Alertify) {
-      
       $scope.getTipoDato= function(){
         $http.post('api/getTipoDato.php' )
           .success(function(data) {
@@ -566,9 +659,13 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
     $scope.getDiagnostico();
      
     $scope.cambiarEstadoDiagnostico=function(index, codigo, estado){
-      $http.post('api/actualizarestadoresultado.php',{id:codigo, estado:estado})
+      console.log(index);
+      console.log(codigo);
+      console.log(estado);
+
+      $http.post('api/actualizarEstadoDiagnostico.php',{id:codigo, estado:estado})
       .success(function(data) {
-        $scope.Resultados[index].estado=!estado;
+        $scope.Diagnosticos[index].estado=!estado;
          Alertify.success('Estado modificado exitosamente.');
         //$scope.Usuarios=data;
       })
@@ -585,11 +682,10 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
     $scope.paramDiag=[];
 
       var getParametro= function(){
-        $http.post('api/getParametro.php' )
+        $http.post('api/getparametro.php' )
           .success(function(data) {
             console.log(data);
             $scope.parametros=data;
-            
           })
           .error(function(data) {
             console.log('Error: ' + data);
@@ -606,13 +702,24 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
             console.log('Error: ' + data);
           });
       };
+
+      var getOpciones= function(){
+        $http.post('api/getEtiquetas.php')
+          .success(function(data) {
+            console.log(data);
+            $scope.Opciones=data;
+          })
+          .error(function(data) {
+            console.log('Error: ' + data);
+          });
+      };
       
       $scope.agregar_parametro=function(param, valid){
         if(valid){
           if(param){
-            var elemento = {"id_parametro":param.id_parametro,"id_operacion":param.id_operacion,"valor":param.valor, "nombre_parametro":$filter('filter')($scope.parametros, {id_parametro: parseInt(param.id_parametro)}, true)[0]['nombre_parametro'], "operacion":$filter('filter')($scope.operaciones, {id_operacion:parseInt(param.id_operacion)}, true)[0]['signo']};
+            if($scope.tipo==3) var elemento = {"id_parametro":param.id_parametro,"id_operacion":param.id_operacion,"valor":param.valor, "nombre_parametro":$filter('filter')($scope.parametros, {id_parametro: param.id_parametro}, true)[0]['nombre_parametro'], "operacion":$filter('filter')($scope.operaciones, {id_operacion:param.id_operacion}, true)[0]['signo'], 'tipo':$scope.tipo, 'etiqueta':$filter('filter')($scope.Opciones, {id_maestro:param.valor}, true)[0].etiqueta};
+            else var elemento = {"id_parametro":param.id_parametro,"id_operacion":param.id_operacion,"valor":param.valor, "nombre_parametro":$filter('filter')($scope.parametros, {id_parametro: param.id_parametro}, true)[0]['nombre_parametro'], "operacion":$filter('filter')($scope.operaciones, {id_operacion:param.id_operacion}, true)[0]['signo'], 'tipo':$scope.tipo};
             $scope.paramDiag.push(elemento);
-            console.log($scope.paramDiag);
             $scope.npar.id_parametro="";
             $scope.npar.id_operacion="";
             $scope.npar.valor="";
@@ -630,14 +737,13 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
       };
 
       $scope.crearDiagnostico=function(re){
-        console.log(re);
-        console.log($scope.paramDiag);
         if(re != undefined){
           $http.post('api/crearDiagnostico.php',{diagnostico:re, parametros:$scope.paramDiag})
             .success(function(data) {
-              if(data.Success){
+              if(data.success){
                   console.log(data);
-                  Alertify.success("Resultado creado exitosamente.");
+                  Alertify.success("Diagnóstico creado exitosamente.");
+                  $location.url("/diagnosticos");
               }else if(data.Error){
                   console.log(data);
                   Alertify.error(data.Error);
@@ -652,17 +758,34 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
         }
       };
 
+      $scope.tipoParametro=function(id, id_param){
+        if(id != undefined){
+          $scope.tipo=$filter('filter')($scope.parametros, {id_parametro: id}, true)[0].id_tipo_dato;
+          if($scope.tipo==3){
+            $scope.Etiquetas=$filter('filter')($scope.Opciones, {id_parametro: id_param}, true);
+            $scope.npar.id_operacion=4;
+          }
+
+          console.log($scope.Opciones);
+        }
+      };
+      
       getParametro();
       getOperaciones();
+      getOpciones();
   }])
   // #Controlador Nuevo Resultado
 
 
 // Controlador Calcular
-.controller('calcularController',['$scope', 'DTOptionsBuilder', 'DTColumnDefBuilder', '$http', 'Alertify', function ($scope, DTOptionsBuilder, DTColumnDefBuilder, $http, Alertify) {
-    $scope.calcu=[];
-    var getParametro= function(){
-        $http.post('api/getParametrosActivos.php' )
+.controller('calcularController',['$scope', '$http', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'Alertify', function ($scope, $http, DTOptionsBuilder, DTColumnDefBuilder, Alertify) {
+    $scope.dtOptions = DTOptionsBuilder.newOptions()
+        .withPaginationType('full_numbers')
+        .withDisplayLength(10)
+        .withBootstrap()
+
+    var getParametro = function(){
+        $http.post('api/getparametrosActivos.php' )
           .success(function(data) {
             console.log(data);
             $scope.Parametros=data;
@@ -673,12 +796,35 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
           });
       };
 
-     $scope.calcular= function(){
-      console.log($scope.calcu);
-        $http.post('api/calcular.php', {params: $scope.calcu} )
+    var getOpciones= function(){
+        $http.post('api/getEtiquetas.php')
           .success(function(data) {
             console.log(data);
-            
+            $scope.Opciones=data;
+          })
+          .error(function(data) {
+            console.log('Error: ' + data);
+          });
+      };
+
+      var getDiagnostico= function(){
+       $http.post('api/getDiagnostico.php' )
+        .success(function(data) {
+          console.log(data);
+          $scope.Diagnosticos=data[0];
+          $scope.ParametrosDiagnostico=data[1];
+        })
+        .error(function(data) {
+          console.log('Error: ' + data);
+        });
+    };
+
+     $scope.calcular= function(){
+      $http({method:'POST', url: 'api/calcular.php', data: $.param({'params': $scope.Parametros}), headers :{ 'Content-Type': 'application/x-www-form-urlencoded' }})
+          .success(function(data) {
+            console.log(data);
+            $scope.calculado = true;
+            $scope.Resultado = data;
           })
           .error(function(data) {
             console.log('Error: ' + data);
@@ -686,6 +832,8 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
       };
 
       getParametro();
+      getOpciones();
+      getDiagnostico();
 
 }]) // /#Controlador Calcular
 

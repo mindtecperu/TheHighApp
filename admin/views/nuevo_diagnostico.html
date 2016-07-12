@@ -39,11 +39,11 @@
 
                 <div class="col-lg-11 col-md-offset-1">
                     <div class="col-lg-2">
-                         <label class="control-label">Parámetro:</label>
+                         <label class="control-label">Parámetro: </label>
                     </div>
                     <div class="col-lg-4">
-                        <select class="form-control" ng-model='npar.id_parametro' required>
-                        <option  value="">- Seleccionar Parámetro -</option>
+                        <select class="form-control" ng-model='npar.id_parametro' ng-change="tipoParametro(npar.id_parametro)" required>
+                        <option value="">- Seleccionar Parámetro -</option>
                         <option ng-repeat="pa in parametros" value="{{pa.id_parametro}}">{{pa.nombre_parametro}} ({{pa.unidad}})</option>
                         </select>
                     </div>
@@ -56,12 +56,20 @@
                     </div>
                     <div class="col-lg-4">
                         <select class="form-control" ng-model='npar.id_operacion' required>
-                        <option  value="">- Seleccionar Operación -</option>
-                        <option ng-repeat="pa in operaciones" value="{{pa.id_operacion}}">{{pa.operacion}}</option>
+                        <option value="">- Seleccionar Operación -</option>
+                        <option ng-disabled="pa.id_operacion != 4 && tipo==3" ng-repeat="pa in operaciones" value="{{pa.id_operacion}}">{{pa.operacion}}</option>
                         </select>
                     </div>
-                   <div class="col-lg-3">
+                    
+                   <div ng-if="tipo == 1" class="col-lg-3">
                         <input  class="form-control" ng-model='npar.valor' type="number" placeholder="Valor" required/>
+                    </div>
+
+                    <div ng-if="tipo == 3" class="col-lg-3">
+                        <select class="form-control" ng-model="npar.valor" required>
+                            <option value="">- Seleccionar -</option>
+                            <option ng-repeat="op in Opciones" value="{{op.id_maestro}}">{{op.etiqueta}}</option>
+                        </select>
                     </div>
 
                     <br/><br/>
@@ -102,7 +110,7 @@
                           <tr ng-repeat='p in paramDiag track by $index'>
                             <td> {{p.nombre_parametro}} </td>
                             <td> {{p.operacion}} </td>
-                            <td> {{p.valor}} </td>
+                            <td> <span ng-if="p.tipo !=3">{{p.valor}}</span> <span ng-if="p.tipo ==3">{{p.etiqueta}}</span> </td>
                             <td ng-click="eliminarParametro($index)">
                                 <a href="" title="Eliminar"><span class="glyphicon glyphicon-trash" style="font-size: 20px;"></a>
                             </td>

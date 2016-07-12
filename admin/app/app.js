@@ -44,6 +44,11 @@ var app = angular.module('intelectaApp', [
           caseInsensitiveMatch: true,
           controller: 'parametroController'
         })
+          .when('/opciones/:id', {
+          templateUrl: 'views/opciones.html',
+          caseInsensitiveMatch: true,
+          controller: 'opcionesController'
+        })
           .when('/nuevo_parametro', {
           templateUrl: 'views/nuevo_parametro.html',
           caseInsensitiveMatch: true,

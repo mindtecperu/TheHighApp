@@ -25,7 +25,7 @@
                                 <th>Nombre</th>
                                 <th>Tipo de Dato</th>
                                 <th>Estado</th>
-                                <th>Acciones</th>
+                                <th class="text-center" ng-show="Perfil.perfil==1">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,12 +34,10 @@
                                 <a ng-show="Perfil.perfil==2" href=""> {{pa.nombre_parametro }}</a></td>
                                 <td> {{pa.nombre_tipo }}</td>
                                 <td> {{pa.estado | filterActivo}}</td>
-                                <td><a href="" ng-show="pa.estado==1 && Perfil.perfil==1" title="Desactivar" ng-click="cambiarEstadoParametro($index, pa.id_parametro, pa.estado)"><span class="glyphicon glyphicon-off" style="font-size: 20px"></a>
+                                <td class="text-center"><a href="" ng-show="pa.estado==1 && Perfil.perfil==1" title="Desactivar" ng-click="cambiarEstadoParametro($index, pa.id_parametro, pa.estado)"><span class="glyphicon glyphicon-off" style="font-size: 20px"></a>
                                   <a href="" ng-show="pa.estado==0 && Perfil.perfil==1" title="Activar" ng-click="cambiarEstadoParametro($index, pa.id_parametro, pa.estado)"><span class="glyphicon glyphicon-off" style="font-size: 20px; color:red"></a>
-                                  <a href="" ng-show="pa.estado==1 && Perfil.perfil==2" title="Desactivar"><span class="glyphicon glyphicon-off" style="font-size: 20px"></a>
-                                  <a href="" ng-show="pa.estado==0 && Perfil.perfil==2" title="Activar"><span class="glyphicon glyphicon-off" style="font-size: 20px; color:red"></a>
+                                  <a href="#/opciones/{{pa.id_parametro}}" ng-show="pa.estado==1 && Perfil.perfil==1 && pa.id_tipo_dato==3" title="Opciones"><span class="glyphicon glyphicon-list" style="font-size: 20px"></a>
                                 </td>
-                                 
 
                             </tr>
                         </tbody>
