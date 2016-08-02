@@ -1,0 +1,111 @@
+<div class="modal-header">
+    <h3 class="modal-title">Nueva Fórmula Diagnóstico</h3>
+</div>
+<!-- FIN modal-header -->
+
+<div class="modal-body">
+	<ng-form name="formFormula">
+		<div class="col-lg-12 col-lg-offset-1">
+	        <div class="col-lg-2">
+	             <label class="control-label">Parámetro:</label>
+	        </div>
+	        <div class="col-lg-3">
+	            <select class="form-control" ng-model="formu.id_parametro" required>
+	                <option ng-repeat="par in params" value="{{par.id_parametro}}">{{par.nombre_parametro}}</option>
+	            </select>
+	        </div>
+	        <div class="col-lg-2 col-lg-offset-1">
+	             <label class="control-label">Multiplicador:</label>
+	        </div>
+	        <div class="col-lg-3">
+	            <input class="form-control" string-to-number ng-model="formu.multiplicador" type="number" step="any" placeholder="Multiplicador" required/>
+	        </div>
+		</div>
+
+		<div class="col-lg-10 col-lg-offset-2">
+			<br/>
+	        <div class="col-lg-4">
+	           <button type="button" ng-click="agregar_parametro(formu, formFormula.$valid)" class="col-lg-12 col-xs-12 btn btn-primary">Agregar Parametro</button>
+	        </div>
+
+	        <div class="col-lg-4 col-lg-offset-1">
+	           <button type="button" ng-click="cancelar()" class="col-lg-12 col-xs-12 btn btn-warning">Cancelar</button>
+	        </div>
+     	</div>
+
+ 	</ng-form>
+	  
+</div>
+<!-- FIN modal-body -->
+
+<div class="modal-footer">
+	<div class="form-group" ng-show="paramFormula.length>0">
+		<div class="col-lg-12">         
+	      <br/>
+	      <hr size="10px" color="black" />     
+	  	</div>
+
+        <div class="col-lg-8 col-lg-offset-2">       
+			<div class="table-responsive">
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="text-center">Parámetro</th>
+							<th class="text-center">Multiplicador</th>
+							<th class="text-center">Quitar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat='p in paramFormula track by $index'>
+							<td class="text-center"> {{p.nombre_parametro}} </td>
+							<td class="text-center"> {{p.multiplicador}} </td>
+							<td class="text-center" ng-click="eliminarParametro($index)">
+							<a href="" title="Eliminar"><span class="glyphicon glyphicon-trash" style="font-size: 20px;"></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+        </div>
+
+        <div class="col-lg-11 col-md-offset-1">
+            <div class="col-lg-2">
+                 <label class="control-label">Operación:</label>
+            </div>
+            <div class="col-lg-4">
+                <select class="form-control" ng-model="formu2.id_operacion" required>
+                <option value="">- Seleccionar Operación -</option>
+                <option ng-repeat="pa in ops" value="{{pa.id_operacion}}">{{pa.operacion}}</option>
+                </select>
+            </div>
+            
+           <div class="col-lg-3">
+                <input  class="form-control" ng-model="formu2.valor" type="number" step="any" placeholder="Valor" required/>
+            </div>
+
+            <br/><br/>
+        </div>
+
+        <div class="col-lg-11 col-md-offset-1">
+            <div class="col-lg-2">
+                 <label class="control-label">Formula Resultante:</label>
+            </div>
+           <div class="col-lg-9 text-left">
+                <button type="button" class="btn btn-default btn-lg" disabled><span ng-repeat="fr in paramFormula"> + ({{fr.multiplicador}})*{{fr.nombre_parametro}} </span> <span ng-repeat="ope in ops | filter:{id_operacion:(formu2.id_operacion*1)}:true"> {{ope.signo}} </span> {{formu2.valor}} </button>
+            </div>
+
+            <br/><br/>
+        </div>
+
+        <div class="col-lg-10 col-lg-offset-2">
+			<br/>
+	        <div class="col-lg-4">
+	           <button type="button" ng-click="agregar_formula(formu2)" ng-disabled="!!formu2.id_operacion=='' || !!formu2.valor==''" class="col-lg-12 col-xs-12 btn btn-primary">Agregar Fórmula</button>
+	        </div>
+
+	        <div class="col-lg-4 col-lg-offset-1">
+	           <button type="button" ng-click="cancelar()" class="col-lg-12 col-xs-12 btn btn-warning">Cancelar</button>
+	        </div>
+     	</div>
+    </div>
+</div>

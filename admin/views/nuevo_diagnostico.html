@@ -47,6 +47,9 @@
                         <option ng-repeat="pa in parametros" value="{{pa.id_parametro}}">{{pa.nombre_parametro}} ({{pa.unidad}})</option>
                         </select>
                     </div>
+                    <div class="col-lg-4">
+                        <button type="button" class="btn btn-primary glyphicon glyphicon-function" ng-click="open_formula()"> F </button>
+                    </div>
                     <br/><br/>
                 </div>
 
@@ -68,7 +71,7 @@
                     <div ng-if="tipo == 3" class="col-lg-3">
                         <select class="form-control" ng-model="npar.valor" required>
                             <option value="">- Seleccionar -</option>
-                            <option ng-repeat="op in Opciones" value="{{op.id_maestro}}">{{op.etiqueta}}</option>
+                            <option ng-repeat="op in Opciones | filter:{id_parametro:npar.id_parametro}:true" value="{{op.id_maestro}}">{{op.etiqueta}}</option>
                         </select>
                     </div>
 
@@ -108,7 +111,8 @@
                         </thead>
                         <tbody>
                           <tr ng-repeat='p in paramDiag track by $index'>
-                            <td> {{p.nombre_parametro}} </td>
+                            <td ng-if="p.formula==0"> {{p.nombre_parametro}} </td>
+                            <td ng-if="p.formula==1"> <span ng-repeat="fr in p.valores">+ ({{fr.multiplicador}})*{{fr.nombre_parametro}}</span> </td>
                             <td> {{p.operacion}} </td>
                             <td> <span ng-if="p.tipo !=3">{{p.valor}}</span> <span ng-if="p.tipo ==3">{{p.etiqueta}}</span> </td>
                             <td ng-click="eliminarParametro($index)">

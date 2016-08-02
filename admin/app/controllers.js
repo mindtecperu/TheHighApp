@@ -44,6 +44,17 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
     };
   })
 
+  .filter('filterAResultado', function(){
+    return function(id){
+      if(id==0){
+        return "Negativo";
+      }
+      else{
+        return "Positivo";
+      }
+    };
+  })
+
 .directive('stringToNumber', function() {
   return {
     require: 'ngModel',
@@ -94,17 +105,6 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
                   });
     };
 
-    $scope.getPerfil=function(){
-      $http.post('api/getPerfilUsuario.php')
-      .success(function(data) {
-        console.log(data);
-        $rootScope.Perfil = data;
-      })
-      .error(function(data) {
-        console.log('Error: ' + data);
-      });
-    };
-
     $scope.getPerfiles= function(){
       $http.post('api/getPerfiles.php' )
       .success(function(data) {
@@ -118,7 +118,6 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
 
     $scope.getPerfiles();
     $scope.getUsuario();
-    $scope.getPerfil();
      
     $scope.cambiarEstadoUsuario=function(index, codigo, estado){
          console.log(index);
@@ -650,6 +649,7 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
           console.log(data);
           $scope.Diagnosticos=data[0];
           $scope.ParametrosDiagnostico=data[1];
+          $scope.FormulaDiagnostico=data[2];
         })
         .error(function(data) {
           console.log('Error: ' + data);
@@ -677,7 +677,7 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
 }]) // /#Lista de Resultados
 
 // Controlador Nuevo Diagnostico
-.controller('nuevoDiagnosticoController',['$scope', '$http', '$location', '$filter', 'Alertify', function ($scope, $http, $location, $filter, Alertify) {
+.controller('nuevoDiagnosticoController',['$scope', '$http', '$location', '$filter', 'Alertify', '$uibModal', function ($scope, $http, $location, $filter, Alertify, $uibModal) {
     
     $scope.paramDiag=[];
 
@@ -717,8 +717,8 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
       $scope.agregar_parametro=function(param, valid){
         if(valid){
           if(param){
-            if($scope.tipo==3) var elemento = {"id_parametro":param.id_parametro,"id_operacion":param.id_operacion,"valor":param.valor, "nombre_parametro":$filter('filter')($scope.parametros, {id_parametro: param.id_parametro}, true)[0]['nombre_parametro'], "operacion":$filter('filter')($scope.operaciones, {id_operacion:param.id_operacion}, true)[0]['signo'], 'tipo':$scope.tipo, 'etiqueta':$filter('filter')($scope.Opciones, {id_maestro:param.valor}, true)[0].etiqueta};
-            else var elemento = {"id_parametro":param.id_parametro,"id_operacion":param.id_operacion,"valor":param.valor, "nombre_parametro":$filter('filter')($scope.parametros, {id_parametro: param.id_parametro}, true)[0]['nombre_parametro'], "operacion":$filter('filter')($scope.operaciones, {id_operacion:param.id_operacion}, true)[0]['signo'], 'tipo':$scope.tipo};
+            if($scope.tipo==3) var elemento = {"id_parametro":param.id_parametro,"id_operacion":param.id_operacion,"valor":param.valor, "nombre_parametro":$filter('filter')($scope.parametros, {id_parametro: param.id_parametro}, true)[0]['nombre_parametro'], "operacion":$filter('filter')($scope.operaciones, {id_operacion:param.id_operacion}, true)[0]['signo'], 'tipo':$scope.tipo, 'etiqueta':$filter('filter')($scope.Opciones, {id_maestro:param.valor}, true)[0].etiqueta, 'formula':0};
+            else var elemento = {"id_parametro":param.id_parametro,"id_operacion":param.id_operacion,"valor":param.valor, "nombre_parametro":$filter('filter')($scope.parametros, {id_parametro: param.id_parametro}, true)[0]['nombre_parametro'], "operacion":$filter('filter')($scope.operaciones, {id_operacion:param.id_operacion}, true)[0]['signo'], 'tipo':$scope.tipo, 'formula':0};
             $scope.paramDiag.push(elemento);
             $scope.npar.id_parametro="";
             $scope.npar.id_operacion="";
@@ -769,6 +769,35 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
           console.log($scope.Opciones);
         }
       };
+
+      $scope.open_formula = function () {
+        var modalInstance = $uibModal.open({
+          animation: true,
+          templateUrl: 'views/formula_diagnostico_modal.html',
+          controller: 'formulaModal',
+          size: 'lg',
+          resolve: {
+            parametros: function () {
+              return $scope.parametros;
+            },
+            operaciones: function () {
+              return  $scope.operaciones;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (resultado) {
+            //success
+            var resultado1 = resultado[0];
+            var resultado2 = resultado[1];
+
+            var elemento = {"id_parametro":'',"id_operacion":resultado2.id_operacion,"valor":resultado2.valor, "nombre_parametro":'', "operacion":resultado2.signo, 'tipo':1, 'formula':1, 'valores':resultado1};
+            $scope.paramDiag.push(elemento);
+        }, function () {
+          //error
+
+        });
+      };
       
       getParametro();
       getOperaciones();
@@ -776,6 +805,43 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
   }])
   // #Controlador Nuevo Resultado
 
+// /#Controlador formula diagnostico Modal
+.controller('formulaModal', ['$scope', '$modalInstance', '$http', 'Alertify', '$filter', 'parametros', 'operaciones', function ($scope, $modalInstance, $http, Alertify, $filter, parametros, operaciones) {
+    $scope.paramFormula = [];
+    $scope.params = $filter('filter')(parametros, {id_tipo_dato: 1}, true);
+    $scope.ops = operaciones;
+
+    $scope.agregar_parametro=function(param, valid){
+        if(valid){
+          if(param){
+            var elemento = {"id_parametro":param.id_parametro,"multiplicador":param.multiplicador, "nombre_parametro":$filter('filter')($scope.params, {id_parametro: parseInt(param.id_parametro)}, true)[0]['nombre_parametro']};
+            $scope.paramFormula.push(elemento);
+            $scope.formu.id_parametro="";
+            $scope.formu.multiplicador="";
+            Alertify.success("Parámetro agregado");
+          }
+        }
+        else{
+          Alertify.error('Ingresar todos los datos.');
+        }
+      };
+
+    $scope.eliminarParametro=function(index){
+        $scope.paramFormula.splice(index,1);
+        Alertify.success('Parámetro eliminado.');
+      };
+
+    $scope.cancelar = function () {
+      $modalInstance.dismiss('cancel');
+    };
+
+    $scope.agregar_formula = function (formu) {
+      formu.signo = $filter('filter')($scope.ops, {id_operacion: parseInt(formu.id_operacion)}, true)[0]['signo'];
+      $modalInstance.close({'0':$scope.paramFormula, '1':formu});
+    };
+
+  }])
+  // /#Controlador formula diagnostico Modal
 
 // Controlador Calcular
 .controller('calcularController',['$scope', '$http', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'Alertify', function ($scope, $http, DTOptionsBuilder, DTColumnDefBuilder, Alertify) {
@@ -837,8 +903,31 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
 
 }]) // /#Controlador Calcular
 
+// Controlador Reporte
+.controller('reporteController',['$scope', '$http', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'Alertify', function ($scope, $http, DTOptionsBuilder, DTColumnDefBuilder, Alertify) {
+    $scope.dtOptions = DTOptionsBuilder.newOptions()
+        .withPaginationType('full_numbers')
+        .withDisplayLength(10)
+        .withBootstrap()
+
+    var getReporte = function(){
+        $http.post('api/getReporte.php' )
+          .success(function(data) {
+            console.log(data);
+            $scope.Parametros=data;
+            
+          })
+          .error(function(data) {
+            console.log('Error: ' + data);
+          });
+      };
+
+      getReporte();
+
+}]) // /#Controlador Reporte
+
   // Logout
-  .controller('navbarcontroller',['$scope', '$location', '$http', function ($scope, $location, $http) {
+  .controller('navbarcontroller',['$scope', '$location', '$http', '$rootScope', function ($scope, $location, $http, $rootScope) {
         $scope.logout=function(){
           console.log("adios :(");
               $http.post('../api/logout.php' )
@@ -851,6 +940,18 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
                   });
         };
 
+        var getPerfil=function(){
+          $http.post('api/getPerfilUsuario.php')
+          .success(function(data) {
+            console.log(data);
+            $rootScope.Perfil = data;
+          })
+          .error(function(data) {
+            console.log('Error: ' + data);
+          });
+        };
+
+        getPerfil();
     }])
 
   // Cambio Contraseña

@@ -89,6 +89,11 @@ var app = angular.module('intelectaApp', [
           caseInsensitiveMatch: true,
           controller: 'calcularController'
         })
+          .when('/reporte', {
+          templateUrl: 'views/reporte.html',
+          caseInsensitiveMatch: true,
+          controller: 'reporteController'
+        })
         .otherwise({
           redirectTo: '/'
         });
