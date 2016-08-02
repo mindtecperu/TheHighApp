@@ -808,13 +808,13 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
 // /#Controlador formula diagnostico Modal
 .controller('formulaModal', ['$scope', '$modalInstance', '$http', 'Alertify', '$filter', 'parametros', 'operaciones', function ($scope, $modalInstance, $http, Alertify, $filter, parametros, operaciones) {
     $scope.paramFormula = [];
-    $scope.params = $filter('filter')(parametros, {id_tipo_dato: 1}, true);
+    $scope.params = $filter('filter')(parametros, {id_tipo_dato: '1'}, true);
     $scope.ops = operaciones;
 
     $scope.agregar_parametro=function(param, valid){
         if(valid){
           if(param){
-            var elemento = {"id_parametro":param.id_parametro,"multiplicador":param.multiplicador, "nombre_parametro":$filter('filter')($scope.params, {id_parametro: parseInt(param.id_parametro)}, true)[0]['nombre_parametro']};
+            var elemento = {"id_parametro":param.id_parametro,"multiplicador":param.multiplicador, "nombre_parametro":$filter('filter')($scope.params, {id_parametro: param.id_parametro}, true)[0]['nombre_parametro']};
             $scope.paramFormula.push(elemento);
             $scope.formu.id_parametro="";
             $scope.formu.multiplicador="";
@@ -836,7 +836,7 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
     };
 
     $scope.agregar_formula = function (formu) {
-      formu.signo = $filter('filter')($scope.ops, {id_operacion: parseInt(formu.id_operacion)}, true)[0]['signo'];
+      formu.signo = $filter('filter')($scope.ops, {id_operacion: formu.id_operacion}, true)[0]['signo'];
       $modalInstance.close({'0':$scope.paramFormula, '1':formu});
     };
 
