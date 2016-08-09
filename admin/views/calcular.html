@@ -26,7 +26,7 @@
                          <label class="control-label"> {{params.nombre_parametro}} </label>
                     </div>
                     <div ng-if="params.id_tipo_dato!=3" class="col-lg-6">
-                        <input class="form-control" ng-model="Parametros[$index].valor" type="number" placeholder="{{params.unidad}}"/>
+                        <input class="form-control" ng-model="Parametros[$index].valor" type="number" step="any" placeholder="{{params.unidad}}"/>
                     </div>
                     <div ng-if="params.id_tipo_dato == 3" class="col-lg-6">
                         <select class="form-control" ng-model="Parametros[$index].valor">
@@ -83,8 +83,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                        <tr ng-repeat="diag in Resultado ">
-                                            <td> <span ng-repeat="paxdi in ParametrosDiagnostico | filter : {id_diagnostico:diag.id}:true"> {{paxdi.nombre_parametro}} {{paxdi.signo}} <span ng-if="paxdi.id_tipo_dato!=3">{{paxdi.valor}}</span><span ng-if="paxdi.id_tipo_dato==3">{{paxdi.etiqueta}}</span> </span> </td>
+                                        <tr ng-repeat="diag in Resultado ">                                            
+                                            <td>
+                                                <span ng-repeat="paxdi in ParametrosDiagnostico | filter : {id_diagnostico:diag.id}:true">
+                                                <span ng-if="paxdi.formula==0">{{paxdi.nombre_parametro}}</span>
+                                                <span ng-if="paxdi.formula==1"><span ng-repeat="fr in FormulaDiagnostico | filter:{id_parametros_diagnostico:paxdi.id_parametros_diagnostico}:true"> + ({{fr.multiplicador*1.0}})*{{fr.nombre_parametro}}</span></span>
+                                                {{paxdi.signo}}
+                                                <span ng-if="paxdi.id_tipo_dato!=3">{{paxdi.valor}}</span>
+                                                <span ng-if="paxdi.id_tipo_dato==3">{{paxdi.etiqueta}}</span>
+                                                </span>
+                                            </td>
+
                                             <td><strong> POSITIVO </strong> </td>
                                         </tr>
                                 </tbody>

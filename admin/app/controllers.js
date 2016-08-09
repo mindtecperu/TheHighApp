@@ -44,7 +44,7 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
     };
   })
 
-  .filter('filterAResultado', function(){
+  .filter('filterResultado', function(){
     return function(id){
       if(id==0){
         return "Negativo";
@@ -879,6 +879,7 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
           console.log(data);
           $scope.Diagnosticos=data[0];
           $scope.ParametrosDiagnostico=data[1];
+          $scope.FormulaDiagnostico=data[2];  
         })
         .error(function(data) {
           console.log('Error: ' + data);
@@ -905,16 +906,28 @@ angular.module('Controllers', ['datatables', 'datatables.bootstrap', 'datatables
 
 // Controlador Reporte
 .controller('reporteController',['$scope', '$http', 'DTOptionsBuilder', 'DTColumnDefBuilder', 'Alertify', function ($scope, $http, DTOptionsBuilder, DTColumnDefBuilder, Alertify) {
-    $scope.dtOptions = DTOptionsBuilder.newOptions()
+     $scope.dtOptions = DTOptionsBuilder.newOptions()
         .withPaginationType('full_numbers')
         .withDisplayLength(10)
         .withBootstrap()
+        .withButtons([
+            'colvis',
+            'copy',
+            {
+                extend: "excel",
+                filename:  "Reporte_resultados",
+                title:"Reporte resultados High APP",
+                CharSet: "utf8",
+                exportData: { decodeEntities: true }
+            },
+        ]);
 
     var getReporte = function(){
         $http.post('api/getReporte.php' )
           .success(function(data) {
             console.log(data);
-            $scope.Parametros=data;
+            $scope.Reporte=data[0];
+            $scope.ParamsReporte=data[1];
             
           })
           .error(function(data) {
